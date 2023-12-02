@@ -1,0 +1,62 @@
+﻿@page "/counter"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Services.Contract;
+@using DTOs;
+@inject IInventoryCountingService IInventoryCountingService
+
+<PageTitle>Counter</PageTitle>
+<h1>Inventory Couted:</h1>
+
+<div class="row pb-3">
+   <div class="row">
+     <div class="form-group col-sm-4">
+        <label for="exampleInputEmail1">Item Code:</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+            placeholder="Enter Item code">
+    </div>
+    <div class="form-group col-sm-4">
+        <label for="exampleInputEmail1">From Date:</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+            placeholder="Enter email">
+    </div>
+    <div class="form-group col-sm-4">
+        <label for="exampleInputEmail1">To Date:</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+            placeholder="Enter email">
+    </div>
+   </div>
+    <div class="pt-3">
+         <button type="submit" class="btn btn-primary mb-2"><i class="bi bi-search"></i> Search</button>
+         <button type="submit" class="btn btn-primary mb-2">Clear <i class="bi bi-x-lg"></i></button>
+    </div>
+</div>
+
+<p>Table List:</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Item Code</th>
+            <th scope="col">Quantity</th>
+            <th scope="col" width="200">Created Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inventoryCountingDto in inventoryCountingDtos)
+        {
+            <tr>
+                <td>@inventoryCountingDto.Id</td>
+                <td>@inventoryCountingDto.ItemCode</td>
+                <td>@inventoryCountingDto.Quantity</td>
+                <td>@inventoryCountingDto.CreatedDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    private IEnumerable<InventoryCountingDto> inventoryCountingDtos = new List<InventoryCountingDto>();
+    protected override async Task OnInitializedAsync()
+    {
+        inventoryCountingDtos = await IInventoryCountingService.GetAllInventoryCountedAsync();
+    }
+}
